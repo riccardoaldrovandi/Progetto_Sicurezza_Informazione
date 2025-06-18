@@ -43,7 +43,7 @@ public class Server {
 		}*/
 		
 		try {
-			serverPrivateKey = CryptoUtils.loadPrivateKey("server_private_key.der");
+			serverPrivateKey = CryptoUtils.loadPrivateKey("../keys/server_private_key.der");
 		} catch (Exception e) {
 			System.out.println("[Server] Errore caricamento chiave privata del server.");
 			e.printStackTrace();
@@ -52,7 +52,7 @@ public class Server {
 		}
 		
 		try {
-			clientPublicKey = CryptoUtils.loadPublicKey(id + "_public_key.der");
+			clientPublicKey = CryptoUtils.loadPublicKey("../keys/" + id + "_public_key.der");
 		} catch (Exception e) {
 			System.out.println("[Server] Errore caricamento chiave pubblica del client ID " + id);
 			e.printStackTrace();

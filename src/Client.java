@@ -37,8 +37,8 @@ public class Client {
 		PrivateKey clientPrivateKey = null;
         
         try{
-            clientPrivateKey = CryptoUtils.loadPrivateKey(id+"_private_key.der");
-            serverPublicKey = CryptoUtils.loadPublicKey("server_public_key.der");
+            clientPrivateKey = CryptoUtils.loadPrivateKey("../keys/" + id+"_private_key.der");
+            serverPublicKey = CryptoUtils.loadPublicKey("../keys/server_public_key.der");
 		// 1. Genera chiave DH
 		}
 		catch(Exception e){
