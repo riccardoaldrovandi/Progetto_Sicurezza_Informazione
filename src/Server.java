@@ -61,12 +61,12 @@ public class Server {
 		}
 		
 
-		// 1. Genera chiave ECDH
+		//Genera chiave ECDH
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
 		kpg.initialize(new ECGenParameterSpec("secp256r1"));
 		KeyPair keyPair = kpg.generateKeyPair();
 
-		// 2. Invia chiave pubblica ECDH cifrata + firmata
+		// Invia chiave pubblica ECDH cifrata + firmata
 		byte[] ecPubEncoded = keyPair.getPublic().getEncoded();
 		byte[] encryptedPub = CryptoUtils.encryptRSA(ecPubEncoded, clientPublicKey);
 		byte[] signature = CryptoUtils.sign(sha256.digest(encryptedPub), serverPrivateKey);
@@ -76,7 +76,7 @@ public class Server {
 		out.writeInt(signature.length);
 		out.write(signature);
 
-		// 3. Ricevi chiave pubblica ECDH del client cifrata + firmata
+		// Ricezione chiave pubblica ECDH del client cifrata + firmata
 		int len = in.readInt();
 		byte[] clientEnc = new byte[len];
 		in.readFully(clientEnc);
@@ -95,13 +95,13 @@ public class Server {
 		X509EncodedKeySpec x509 = new X509EncodedKeySpec(decodedPub);
 		PublicKey clientECPub = kf.generatePublic(x509);
 
-		// 4. Calcola chiave condivisa
+		// Calcolo chiave condivisa
 		KeyAgreement ka = KeyAgreement.getInstance("ECDH");
 		ka.init(keyPair.getPrivate());
 		ka.doPhase(clientECPub, true);
 		byte[] sharedSecret = ka.generateSecret();
 
-		// 5. Deriva chiave simmetrica con SHA-256 (ChaCha20 richiede 32 byte)
+		// Derivazione chiave simmetrica con SHA-256 (ChaCha20 richiede 32 byte)
 		sha256 = MessageDigest.getInstance("SHA-256");
 		sha256.update(sharedSecret);
 		sha256.update(serverNonce); //il nonce è usato per evitare replay attack nello scambio dh
@@ -166,12 +166,12 @@ public class Server {
     	byte[] ciphertext = new byte[ctLen];
     	in.readFully(ciphertext);
     	
-    	// 6. Decifra
+    	//Decifrazione
     	Cipher cipher = Cipher.getInstance("ChaCha20-Poly1305", "SunJCE");
     	cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(nonce));
     	byte[] plaintext = cipher.doFinal(ciphertext);
 
-    	// 7. Estrai lunghezza e messaggio originale
+    	// Estrazione lunghezza e messaggio originale
     	ByteArrayInputStream bais = new ByteArrayInputStream(plaintext);
     	DataInputStream dis = new DataInputStream(bais);
     	int msgLen = dis.readInt();
