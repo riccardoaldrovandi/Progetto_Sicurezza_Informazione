@@ -117,7 +117,7 @@ public class Client {
             
             sendEncryptedMessage(out,key,message,compromised,nonceG);
 
-            // Ricevi risposta cifrata
+            // Ricezione risposta cifrata
             String response = null;
             try{
                response = decryptMessage(in,key,usedNonces);
@@ -172,12 +172,12 @@ public class Client {
     	byte[] ciphertext = new byte[ctLen];
     	in.readFully(ciphertext);
     	
-    	// 6. Decifra
+    	// Decifrazione
     	Cipher cipher = Cipher.getInstance("ChaCha20-Poly1305", "SunJCE");
     	cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(nonce));
     	byte[] plaintext = cipher.doFinal(ciphertext);
 
-    	// 7. Estrai lunghezza e messaggio originale
+    	// Estrazione lunghezza e messaggio originale
     	ByteArrayInputStream bais = new ByteArrayInputStream(plaintext);
     	DataInputStream dis = new DataInputStream(bais);
     	int msgLen = dis.readInt();
